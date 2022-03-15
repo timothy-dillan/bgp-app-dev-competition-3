@@ -70,3 +70,16 @@ func CreateUser(userData *auth_repository.UserData) error {
 
 	return nil
 }
+
+func GetUserFromSession(session string) (string, error) {
+	if strings.TrimSpace(session) == "" {
+		return "", nil
+	}
+
+	ss, err := auth_repository.GetSession(session)
+	if err != nil {
+		return "", err
+	}
+
+	return ss, nil
+}

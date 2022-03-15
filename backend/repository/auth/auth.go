@@ -40,7 +40,7 @@ func StoreSession(userID, session string) error {
 func GetSession(session string) (string, error) {
 	retrievedSession, err := datastore.Cache.Get(fmt.Sprintf(common.CACHE_SESSION_KEY, session))
 	if err != nil {
-		return "", nil
+		return "", err
 	}
 	return string(retrievedSession), nil
 }
