@@ -12,6 +12,8 @@ const CFaLock = chakra(FaLock);
 const LoginPage = () => {
     const [showPassword, setShowPassword] = useState(false);
     const handleShowClick = () => setShowPassword(!showPassword);
+    const [username, setUsername] = useState("")
+    const [password, setPassword] = useState("")
 
     return (
         <Flex
@@ -36,6 +38,14 @@ const LoginPage = () => {
                             boxShadow="md"
                         >
                             <FormControl>
+                                <Input
+                                    type="text"
+                                    placeholder="Username"
+                                    value={username}
+                                    onChange={event => setUsername(event.currentTarget.value)}
+                                />
+                            </FormControl>
+                            <FormControl>
                                 <InputGroup>
                                     <InputLeftElement
                                         pointerEvents="none"
@@ -45,6 +55,8 @@ const LoginPage = () => {
                                     <Input
                                         type={showPassword ? "text" : "password"}
                                         placeholder="Password"
+                                        value={password}
+                                        onChange={event => setPassword(event.currentTarget.value)}
                                     />
                                     <InputRightElement width="4.5rem">
                                         <Button h="1.75rem" size="sm" onClick={handleShowClick}>
@@ -55,10 +67,10 @@ const LoginPage = () => {
                             </FormControl>
                             <Button
                                 borderRadius={0}
-                                type="submit"
                                 variant="solid"
                                 colorScheme="orange"
                                 width="full"
+                                onClick={() => alert(username + password)}
                             >
                                 Login
                             </Button>
