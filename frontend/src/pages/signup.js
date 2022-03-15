@@ -60,7 +60,7 @@ const SignupPage = () => {
                                 colorScheme="orange"
                                 width="full"
                             >
-                                Login
+                                Signup
                             </Button>
                         </Stack>
                     </form>
@@ -68,7 +68,7 @@ const SignupPage = () => {
             </Stack>
             <Box>
                 Already have an account?{" "}
-                <Link color="orange.500" href="#">
+                <Link color="orange.500" to="/login">
                     Login
                 </Link>
             </Box>
