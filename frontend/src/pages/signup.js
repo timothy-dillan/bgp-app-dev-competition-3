@@ -14,6 +14,10 @@ const SignupPage = () => {
     const [showPassword, setShowPassword] = useState(false);
     const handleShowClick = () => setShowPassword(!showPassword);
 
+    const [username, setUsername] = useState("")
+    const [password, setPassword] = useState("")
+    const [name, setName] = useState("")
+
     return (
         <Flex
             flexDirection="column"
@@ -37,6 +41,23 @@ const SignupPage = () => {
                             boxShadow="md"
                         >
                             <FormControl>
+                                <Input
+                                    type="text"
+                                    placeholder="Username"
+                                    value={username}
+                                    onChange={event => setUsername(event.currentTarget.value)}
+                                />
+                            </FormControl>
+                            <FormControl>  
+                                    <Input
+                                        type="text"
+                                        placeholder="Name"
+                                        value={name}
+                                        onChange={event => setName(event.currentTarget.value)}
+                                    />
+                                  
+                            </FormControl>
+                            <FormControl>
                                 <InputGroup>
                                 <InputLeftElement
                                     pointerEvents="none"
@@ -55,6 +76,8 @@ const SignupPage = () => {
                                     <Input
                                         type={showPassword ? "text" : "password"}
                                         placeholder="Password"
+                                        value={password}
+                                        onChange={event => setPassword(event.currentTarget.value)}
                                     />
                                     <InputRightElement width="4.5rem">
                                         <Button h="1.75rem" size="sm" onClick={handleShowClick}>
@@ -65,10 +88,10 @@ const SignupPage = () => {
                             </FormControl>
                             <Button
                                 borderRadius={0}
-                                type="submit"
                                 variant="solid"
                                 colorScheme="orange"
                                 width="full"
+                                onClick={() => alert(name + username + password)}
                             >
                                 Sign Up
                             </Button>
