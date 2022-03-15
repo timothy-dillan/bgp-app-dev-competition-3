@@ -21,21 +21,11 @@ func InitHTTP() error {
 	router.POST("/login", handlers.LogInHandler)
 	router.POST("/signup", handlers.SignUpHandler)
 
-	resource := router.Group("/product")
-	resource.Use(middleware.Authenticate())
+	productEndpoints := router.Group("/product")
+	productEndpoints.Use(middleware.Authenticate())
 	{
-		resource.POST("/add", handlers.ProductAddHandler)
+		productEndpoints.POST("/add", handlers.AddProductHandler)
 	}
-
-	// TODO: Authentication for user-only accessible features
-	/*
-		resource := router.Group("/")
-		resource.Use(middleware.Authenticate())
-		{
-			resource.GET("/login", middleware.Authorize("resource", "read", roleAdapter), handlers.LogInHandler)
-			resource.GET("/signup", middleware.Authorize("resource", "read", roleAdapter), handlers.SignUpHandler)
-		}
-	*/
 
 	err := router.Run()
 	if err != nil {

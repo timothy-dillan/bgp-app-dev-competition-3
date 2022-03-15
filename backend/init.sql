@@ -13,17 +13,19 @@ INSERT INTO users (display_name, username, password) VALUES ('Alice Wonderland',
 
 CREATE TABLE products (
     id SERIAL PRIMARY KEY,
-    original_owner bigint NOT NULL,
-    owner bigint NOT NULL,
+    original_owner int8 NOT NULL,
+    owner int8 NOT NULL,
     image text NOT NULL,
     price_determinant int NOT NULL,
     name varchar(255) NOT NULL, 
-    description text NOT NULL
+    description text NOT NULL,
+    start_time TIMESTAMP NOT NULL,
+    end_time TIMESTAMP NOT NULL
 );
 
 CREATE TABLE biddings (
     id SERIAL PRIMARY KEY,
-    bidder bigint NOT NULL,
+    bidder int8 NOT NULL,
     product_id BIGINT,
     bidding_price float NOT NULL,
     CONSTRAINT fk_product_id FOREIGN KEY(product_id) REFERENCES products(id),

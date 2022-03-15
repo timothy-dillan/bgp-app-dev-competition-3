@@ -1,16 +1,15 @@
-package auth_repository
-import (
-	"time"
-)
+package product_repository
 
-type ProductData struct {
-	DisplayName string `json:"display_name"`
-	Image    string `json:"image"`
-	Price    string `json:"price"`
-	Rate    string `json:"rate"`
-	StartTime string `json:"start_time"`
-	CreatedBy string `json:"created_by"`
-	CreatedAt time.Time `json:"created_at"`
-	UpdatedBy string `json:"updated_by"`
-	UpdatedAt  time.Time `json:"updated_at"`
+import "time"
+
+type Product struct {
+	PriceDeterminant int       `json:"price_determinant"`
+	ID               int64     `json:"id"`
+	OriginalOwner    int64     `json:"original_owner"`
+	Owner            int64     `json:"owner"`
+	Image            string    `json:"image"`
+	Name             string    `json:"name"`
+	Description      string    `json:"description"`
+	StartTime        time.Time `json:"start_time"`
+	EndTime          time.Time `json:"end_time"`
 }
