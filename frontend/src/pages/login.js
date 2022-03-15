@@ -4,9 +4,10 @@ import { FormControl } from "@chakra-ui/form-control";
 import { Input, InputGroup, InputLeftElement, InputRightElement } from "@chakra-ui/input";
 import { Box, Container, Flex, Heading, Stack } from "@chakra-ui/layout";
 import { chakra } from "@chakra-ui/system";
-import { FaLock } from "react-icons/fa";
+import { FaUserAlt, FaLock } from "react-icons/fa";
 import { Link } from "react-router-dom";
 
+const CFaUserAlt = chakra(FaUserAlt);
 const CFaLock = chakra(FaLock);
 
 const LoginPage = () => {
@@ -37,10 +38,19 @@ const LoginPage = () => {
                         >
                             <FormControl>
                                 <InputGroup>
+                                <InputLeftElement
+                                    pointerEvents="none"
+                                    children={<CFaUserAlt color="gray.300" />}
+                                />
+                                <Input placeholder="Username" />
+                                </InputGroup>
+                            </FormControl>
+                            <FormControl>
+                                <InputGroup>
                                     <InputLeftElement
                                         pointerEvents="none"
                                         color="gray.500"
-                                        children={<CFaLock color="gray.500" />}
+                                        children={<CFaLock color="gray.300" />}
                                     />
                                     <Input
                                         type={showPassword ? "text" : "password"}
