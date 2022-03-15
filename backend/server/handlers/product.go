@@ -5,6 +5,7 @@ import (
 	product_repository "backend/repository/product"
 	"log"
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
@@ -27,8 +28,26 @@ func AddProductHandler(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"message": "successfully stored"})
 }
 
-func GetProductsHandler(c *gin.Context) {
+func GetAllProductsHandler(c *gin.Context) {
 	products, err := product.GetProducts()
+	if err != nil {
+		log.Println(err)
+		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"message": "error occurred when retrieving products"})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"message": "successfully retrieved data", "data": products})
+}
+
+func GetProductByUserIDHandler(c *gin.Context) {
+	userID, err := strconv.ParseInt(c.Param("user_id"), 10, 64)
+	if err != nil {
+		log.Println(err)
+		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"message": "error occurred when retrieving user id"})
+		return
+	}
+
+	products, err := product.GetProductsOwnedByUser(userID)
 	if err != nil {
 		log.Println(err)
 		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"message": "error occurred when retrieving products"})

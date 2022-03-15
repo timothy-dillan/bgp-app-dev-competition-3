@@ -20,3 +20,12 @@ func GetProducts() ([]product_repository.Product, error) {
 
 	return products, nil
 }
+
+func GetProductsOwnedByUser(userID int64) ([]product_repository.Product, error) {
+	products, err := product_repository.GetProductsOwnedByUser(userID)
+	if err != nil {
+		return products, err
+	}
+
+	return products, nil
+}

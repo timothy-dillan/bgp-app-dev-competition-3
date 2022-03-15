@@ -12,7 +12,7 @@ import (
 
 func GetProducts() ([]Product, error) {
 	// get product data from cache
-	products, err := getProductsFromCache()
+	products, err := getProductsFromCache(common.CACHE_PRODUCTS_KEY)
 	if err == nil {
 		return products, nil
 	}
@@ -20,18 +20,38 @@ func GetProducts() ([]Product, error) {
 	log.Println(err, "got error from cache, retrieving from DB")
 
 	// get product data from db
-	products, err = getProductsFromDB()
+	products, err = getProductsFromDB(common.DB_GET_PRODUCTS_QUERY)
 	if err != nil {
 		return products, nil
 	}
 
-	storeProductsCache(products)
+	storeProductsCache(common.CACHE_PRODUCTS_KEY, products)
 	return products, nil
 }
 
-func getProductsFromCache() ([]Product, error) {
+func GetProductsOwnedByUser(userID int64) ([]Product, error) {
+	// get product data from cache
+	key := fmt.Sprintf(common.CACHE_USER_PRODUCTS_KEY, userID)
+	products, err := getProductsFromCache(key)
+	if err == nil {
+		return products, nil
+	}
+
+	log.Println(err, "got error from cache, retrieving from DB")
+
+	// get product data from db
+	products, err = getProductsFromDB(common.DB_GET_PRODUCT_BY_USER_ID_QUERY, userID)
+	if err != nil {
+		return products, nil
+	}
+
+	storeProductsCache(key, products)
+	return products, nil
+}
+
+func getProductsFromCache(key string) ([]Product, error) {
 	var product []Product
-	recProducts, err := datastore.Cache.Get(common.CACHE_PRODUCTS_KEY)
+	recProducts, err := datastore.Cache.Get(key)
 	if err != nil {
 		return []Product{}, err
 	}
@@ -44,9 +64,9 @@ func getProductsFromCache() ([]Product, error) {
 	return product, nil
 }
 
-func getProductsFromDB() ([]Product, error) {
+func getProductsFromDB(query string, args ...interface{}) ([]Product, error) {
 	var products []Product
-	rows, err := datastore.DB.Query(common.DB_GET_PRODUCTS_QUERY)
+	rows, err := datastore.DB.Query(query, args...)
 	switch {
 	case err == sql.ErrNoRows:
 		log.Printf("no products")
@@ -143,12 +163,12 @@ func (p *Product) storeProductDB() error {
 	return nil
 }
 
-func storeProductsCache(p []Product) error {
+func storeProductsCache(key string, p []Product) error {
 	parsedProduct, err := jsoniter.Marshal(p)
 	if err != nil {
 		return err
 	}
-	err = datastore.Cache.Set(common.CACHE_PRODUCTS_KEY, parsedProduct)
+	err = datastore.Cache.Set(key, parsedProduct)
 	if err != nil {
 		return err
 	}
