@@ -25,6 +25,7 @@ func InitHTTP() error {
 	productEndpoints.Use(middleware.Authenticate())
 	{
 		productEndpoints.POST("/add", handlers.AddProductHandler)
+		productEndpoints.GET("/all", handlers.GetProductsHandler)
 	}
 
 	err := router.Run()

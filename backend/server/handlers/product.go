@@ -26,3 +26,14 @@ func AddProductHandler(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{"message": "successfully stored"})
 }
+
+func GetProductsHandler(c *gin.Context) {
+	products, err := product.GetProducts()
+	if err != nil {
+		log.Println(err)
+		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"message": "error occurred when retrieving products"})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"message": "successfully retrieved data", "data": products})
+}

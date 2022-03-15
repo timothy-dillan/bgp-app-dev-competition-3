@@ -11,3 +11,12 @@ func CreateProduct(product *product_repository.Product) error {
 
 	return nil
 }
+
+func GetProducts() ([]product_repository.Product, error) {
+	products, err := product_repository.GetProducts()
+	if err != nil {
+		return products, err
+	}
+
+	return products, nil
+}
