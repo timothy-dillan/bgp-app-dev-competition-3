@@ -21,7 +21,7 @@ CREATE TABLE products (
     description text NOT NULL
 );
 
-CREATE TABLE transactions (
+CREATE TABLE biddings (
     id SERIAL PRIMARY KEY,
     bidder bigint NOT NULL,
     product_id BIGINT,
