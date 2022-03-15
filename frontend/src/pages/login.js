@@ -30,7 +30,7 @@ const LoginPage = () => {
             }).catch(res => {
                 toast({
                     title: 'Error',
-                    description: res.data.message,
+                    description: "Account not found",
                     status: 'error',
                     duration: 9000,
                     isClosable: true,

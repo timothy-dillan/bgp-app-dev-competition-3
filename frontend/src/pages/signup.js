@@ -33,7 +33,7 @@ const SignupPage = () => {
             }).catch(res => {
                 toast({
                     title: 'Error',
-                    description: res.data.message,
+                    description: "failed to create",
                     status: 'error',
                     duration: 9000,
                     isClosable: true,
