@@ -10,7 +10,64 @@ import (
 	jsoniter "github.com/json-iterator/go"
 )
 
-func GetProductByID(productID int64) (Product, error)  {
+func GetProducts() ([]Product, error) {
+	// get product data from cache
+	products, err := getProductsFromCache()
+	if err == nil {
+		return products, nil
+	}
+
+	log.Println(err, "got error from cache, retrieving from DB")
+
+	// get product data from db
+	products, err = getProductsFromDB()
+	if err != nil {
+		return products, nil
+	}
+
+	storeProductsCache(products)
+	return products, nil
+}
+
+func getProductsFromCache() ([]Product, error) {
+	var product []Product
+	recProducts, err := datastore.Cache.Get(common.CACHE_PRODUCTS_KEY)
+	if err != nil {
+		return []Product{}, err
+	}
+
+	err = jsoniter.Unmarshal(recProducts, &product)
+	if err != nil {
+		return []Product{}, err
+	}
+
+	return product, nil
+}
+
+func getProductsFromDB() ([]Product, error) {
+	var products []Product
+	rows, err := datastore.DB.Query(common.DB_GET_PRODUCTS_QUERY)
+	switch {
+	case err == sql.ErrNoRows:
+		log.Printf("no products")
+	case err != nil:
+		log.Fatalf("query error: %v\n", err)
+		return []Product{}, err
+	}
+
+	for rows.Next() {
+		var product Product
+		err = rows.Scan(&product.ID, &product.OriginalOwner, &product.Owner, &product.Image, &product.PriceDeterminant, &product.Name, &product.Description, &product.StartTime, &product.EndTime)
+		if err != nil {
+			return nil, err
+		}
+		products = append(products, product)
+	}
+
+	return products, nil
+}
+
+func GetProductByID(productID int64) (Product, error) {
 	// get product data from cache
 	product, err := getProductByIDFromCache(productID)
 	if err == nil {
@@ -19,7 +76,7 @@ func GetProductByID(productID int64) (Product, error)  {
 
 	log.Println(err, "got error from cache, retrieving from DB")
 
-	// get user data from db
+	// get product data from db
 	product, err = getProductByIDFromDB(productID)
 	if err != nil {
 		return product, nil
@@ -31,7 +88,7 @@ func GetProductByID(productID int64) (Product, error)  {
 
 func getProductByIDFromCache(productID int64) (Product, error) {
 	var product Product
-	recProduct, err := datastore.Cache.Get(fmt.Sprintf("bid:product:%d", productID))
+	recProduct, err := datastore.Cache.Get(fmt.Sprintf(common.CACHE_PRODUCT_DATA_KEY, productID))
 	if err != nil {
 		return Product{}, err
 	}
@@ -46,7 +103,7 @@ func getProductByIDFromCache(productID int64) (Product, error) {
 
 func getProductByIDFromDB(productID int64) (Product, error) {
 	var product Product
-	err := datastore.DB.QueryRow("SELECT id, original_owner, owner, image, price_determinant, name, description, start_time, end_time FROM products WHERE id = $1", productID).Scan(&product.ID, &product.OriginalOwner, &product.Owner, &product.Image, &product.PriceDeterminant, &product.Name, &product.Description, &product.StartTime, &product.EndTime)
+	err := datastore.DB.QueryRow(common.DB_GET_PRODUCT_BY_ID_QUERY, productID).Scan(&product.ID, &product.OriginalOwner, &product.Owner, &product.Image, &product.PriceDeterminant, &product.Name, &product.Description, &product.StartTime, &product.EndTime)
 	switch {
 	case err == sql.ErrNoRows:
 		log.Printf("no product with id %d\n", productID)
@@ -80,6 +137,18 @@ func (p Product) storeProductCache() error {
 
 func (p *Product) storeProductDB() error {
 	err := datastore.DB.QueryRow(common.DB_INSERT_PRODUCT_QUERY, p.Name, p.Description, p.Image, p.PriceDeterminant, p.Owner, p.OriginalOwner, p.StartTime, p.EndTime).Scan(&p.ID)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func storeProductsCache(p []Product) error {
+	parsedProduct, err := jsoniter.Marshal(p)
+	if err != nil {
+		return err
+	}
+	err = datastore.Cache.Set(common.CACHE_PRODUCTS_KEY, parsedProduct)
 	if err != nil {
 		return err
 	}
