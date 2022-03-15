@@ -4,22 +4,23 @@ import (
 	"backend/common"
 	auth_repository "backend/repository/auth"
 	"errors"
+	"fmt"
 	"strings"
 
 	"github.com/google/uuid"
 )
 
-func IsUserLoggedIn(session string) (bool, error) {
+func GetSession(session string) (string, error) {
 	if strings.TrimSpace(session) == "" {
-		return false, nil
+		return "", errors.New("session is empty")
 	}
 
-	_, err := auth_repository.GetSession(session)
+	session, err := auth_repository.GetSession(session)
 	if err != nil {
-		return false, err
+		return "", err
 	}
 
-	return true, nil
+	return session, nil
 }
 
 func CheckPassword(username, password string) (bool, error) {
@@ -27,17 +28,17 @@ func CheckPassword(username, password string) (bool, error) {
 		return false, errors.New("empty username or password")
 	}
 
-	hashedPassword, err := auth_repository.GetPassword(username)
+	retUserData, err := auth_repository.GetUserData(username)
 	if err != nil {
 		return false, err
 	}
 
-	return common.ComparePassword(hashedPassword, password), nil
+	return common.ComparePassword(retUserData.Password, password), nil
 }
 
-func CreateSession(username string) (string, error) {
-	if strings.TrimSpace(username) == "" {
-		return "", errors.New("empty username")
+func CreateSession(userID int64) (string, error) {
+	if userID <= 0 {
+		return "", errors.New("empty user id")
 	}
 
 	uuid, err := uuid.NewRandom()
@@ -45,7 +46,7 @@ func CreateSession(username string) (string, error) {
 		return "", err
 	}
 
-	err = auth_repository.StoreSession(username, uuid.String())
+	err = auth_repository.StoreSession(fmt.Sprint(userID), uuid.String())
 	if err != nil {
 		return "", err
 	}
@@ -53,7 +54,7 @@ func CreateSession(username string) (string, error) {
 	return uuid.String(), nil
 }
 
-func CreateUser(userData auth_repository.UserData) error {
+func CreateUser(userData *auth_repository.UserData) error {
 	if strings.TrimSpace(userData.DisplayName) == "" {
 		return errors.New("display name is empty")
 	}
@@ -62,7 +63,7 @@ func CreateUser(userData auth_repository.UserData) error {
 		return errors.New("invalid username or email format")
 	}
 
-	err := auth_repository.StoreUser(userData)
+	err := auth_repository.StoreUserData(userData)
 	if err != nil {
 		return err
 	}

@@ -6,28 +6,31 @@ import (
 	"database/sql"
 	"fmt"
 	"log"
+
+	jsoniter "github.com/json-iterator/go"
 )
 
-func GetPassword(username string) (string, error) {
-	hashedPassword, err := getPasswordFromUsernameCache(username)
+func GetUserData(username string) (UserData, error) {
+	// get user data from cache
+	userData, err := getUserDataFromUsernameCache(username)
 	if err == nil {
-		return hashedPassword, nil
+		return userData, nil
 	}
 
 	log.Println(err, "got error from cache, retrieving from DB")
 
-	hashedPassword, err = getPasswordFromUsernameDB(username)
+	// get user data from db
+	userData, err = getUserDataFromUsernameDB(username)
 	if err != nil {
-		return "", err
+		return UserData{}, nil
 	}
 
-	_ = storePasswordCache(username, hashedPassword)
-
-	return hashedPassword, nil
+	userData.storeUserDataCache()
+	return userData, nil
 }
 
-func StoreSession(username, session string) error {
-	err := datastore.Cache.Set(fmt.Sprintf(common.CACHE_SESSION_KEY, session), []byte(username))
+func StoreSession(userID, session string) error {
+	err := datastore.Cache.Set(fmt.Sprintf(common.CACHE_SESSION_KEY, session), []byte(userID))
 	if err != nil {
 		return err
 	}
@@ -42,39 +45,58 @@ func GetSession(session string) (string, error) {
 	return string(retrievedSession), nil
 }
 
-func getPasswordFromUsernameCache(username string) (string, error) {
-	hashedPassword, err := datastore.Cache.Get(fmt.Sprintf(common.CACHE_PASSWORD_KEY, username))
+func StoreUserData(user *UserData) error {
+	err := user.storeUserDataDB()
 	if err != nil {
-		return "", err
+		return err
 	}
-	return string(hashedPassword), nil
+	user.storeUserDataCache()
+	return nil
 }
 
-func storePasswordCache(username, password string) error {
-	err := datastore.Cache.Set(fmt.Sprintf(common.CACHE_PASSWORD_KEY, username), []byte(password))
+func (u UserData) storeUserDataCache() error {
+	parsedUserData, err := jsoniter.Marshal(u)
+	if err != nil {
+		return err
+	}
+	err = datastore.Cache.Set(fmt.Sprintf(common.CACHE_USER_DATA_KEY, u.Username), parsedUserData)
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func getPasswordFromUsernameDB(username string) (string, error) {
-	var hashedPassword string
-	err := datastore.DB.QueryRow(common.DB_GET_PASSWORD_FROM_USERNAME_QUERY, username).Scan(&hashedPassword)
+func getUserDataFromUsernameCache(username string) (UserData, error) {
+	var data UserData
+	userData, err := datastore.Cache.Get(fmt.Sprintf(common.CACHE_USER_DATA_KEY, username))
+	if err != nil {
+		return UserData{}, err
+	}
+	err = jsoniter.Unmarshal(userData, &data)
+	if err != nil {
+		return UserData{}, err
+	}
+	return data, nil
+}
+
+func (u *UserData) storeUserDataDB() error {
+	u.Password = common.GetHashedPassword(u.Password)
+	err := datastore.DB.QueryRow(common.DB_INSERT_USER_QUERY, u.DisplayName, u.Username, u.Password).Scan(&u.ID)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func getUserDataFromUsernameDB(username string) (UserData, error) {
+	var data UserData
+	err := datastore.DB.QueryRow(common.DB_GET_USER_DATA_FROM_USERNAME_QUERY, username).Scan(&data.ID, &data.DisplayName, &data.Username, &data.Password)
 	switch {
 	case err == sql.ErrNoRows:
 		log.Printf("no user with username %s\n", username)
 	case err != nil:
 		log.Fatalf("query error: %v\n", err)
-		return "", err
+		return UserData{}, err
 	}
-	return hashedPassword, nil
-}
-
-func StoreUser(user UserData) error {
-	_, err := datastore.DB.Exec(common.DB_INSERT_USER_QUERY, user.DisplayName, user.Username, user.Password)
-	if err != nil {
-		return err
-	}
-	return nil
+	return data, nil
 }

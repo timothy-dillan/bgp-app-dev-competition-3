@@ -5,6 +5,7 @@ import (
 	auth_repository "backend/repository/auth"
 	"log"
 	"net/http"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 )
@@ -15,12 +16,13 @@ func LogInHandler(c *gin.Context) {
 		log.Println(err)
 	}
 
-	loggedIn, err := auth.IsUserLoggedIn(session)
+	session, err = auth.GetSession(session)
 	if err != nil {
-		log.Println(err)
+		log.Println(err, "session may be empty or error returned")
 	}
 
-	if loggedIn {
+	// a non-empty session indicates that a user is logged in.
+	if strings.TrimSpace(session) != "" {
 		c.JSON(http.StatusOK, gin.H{"message": "already logged in"})
 		return
 	}
@@ -44,7 +46,14 @@ func LogInHandler(c *gin.Context) {
 		return
 	}
 
-	createdSession, err := auth.CreateSession(loginData.Username)
+	userData, err := auth_repository.GetUserData(loginData.Username)
+	if err != nil {
+		log.Println(err)
+		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"message": "error occurred when retrieving user information"})
+		return
+	}
+
+	createdSession, err := auth.CreateSession(userData.ID)
 	if err != nil {
 		log.Println(err, "error when creating session")
 	}
@@ -60,12 +69,13 @@ func SignUpHandler(c *gin.Context) {
 		log.Println(err)
 	}
 
-	loggedIn, err := auth.IsUserLoggedIn(session)
+	session, err = auth.GetSession(session)
 	if err != nil {
-		log.Println(err)
+		log.Println(err, "session may be empty or error returned")
 	}
 
-	if loggedIn {
+	// a non-empty session indicates that a user is logged in.
+	if strings.TrimSpace(session) != "" {
 		c.JSON(http.StatusOK, gin.H{"message": "already logged in"})
 		return
 	}
@@ -77,13 +87,13 @@ func SignUpHandler(c *gin.Context) {
 		return
 	}
 
-	if err := auth.CreateUser(signUpData); err != nil {
+	if err := auth.CreateUser(&signUpData); err != nil {
 		log.Println(err, "error when signing up")
 		c.JSON(http.StatusInternalServerError, gin.H{"message": "failed to sign up"})
 		return
 	}
 
-	createdSession, err := auth.CreateSession(signUpData.Username)
+	createdSession, err := auth.CreateSession(signUpData.ID)
 	if err != nil {
 		log.Println(err, "error when creating session")
 	}
