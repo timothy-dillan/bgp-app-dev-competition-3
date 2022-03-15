@@ -16,15 +16,15 @@ func InitHTTP() error {
 		})
 	})
 
-	router.GET("/login", handlers.LoginHandler)
-	router.GET("/signup", handlers.SignUpHandler)
+	router.POST("/login", handlers.LogInHandler)
+	router.POST("/signup", handlers.SignUpHandler)
 
 	// TODO: Authentication for user-only accessible features
 	/*
 		resource := router.Group("/")
 		resource.Use(middleware.Authenticate())
 		{
-			resource.GET("/login", middleware.Authorize("resource", "read", roleAdapter), handlers.LoginHandler)
+			resource.GET("/login", middleware.Authorize("resource", "read", roleAdapter), handlers.LogInHandler)
 			resource.GET("/signup", middleware.Authorize("resource", "read", roleAdapter), handlers.SignUpHandler)
 		}
 	*/

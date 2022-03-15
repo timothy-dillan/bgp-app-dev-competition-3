@@ -70,3 +70,11 @@ func getPasswordFromUsernameDB(username string) (string, error) {
 	}
 	return hashedPassword, nil
 }
+
+func StoreUser(user UserData) error {
+	_, err := datastore.DB.Exec(common.DB_INSERT_USER_QUERY, user.DisplayName, user.Username, user.Password)
+	if err != nil {
+		return err
+	}
+	return nil
+}

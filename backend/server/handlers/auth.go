@@ -2,13 +2,14 @@ package handlers
 
 import (
 	auth "backend/internal/auth"
+	auth_repository "backend/repository/auth"
 	"log"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 )
 
-func LoginHandler(c *gin.Context) {
+func LogInHandler(c *gin.Context) {
 	session, err := c.Cookie("bid_auth_session")
 	if err != nil {
 		log.Println(err)
@@ -20,11 +21,11 @@ func LoginHandler(c *gin.Context) {
 	}
 
 	if loggedIn {
-		c.JSON(http.StatusOK, gin.H{"message": "loggedin"})
+		c.JSON(http.StatusOK, gin.H{"message": "already logged in"})
 		return
 	}
 
-	var loginData auth.LoginData
+	var loginData auth_repository.UserData
 	if err := c.BindJSON(&loginData); err != nil {
 		log.Println(err, "error when unmarshalling login data")
 		c.JSON(http.StatusInternalServerError, gin.H{"message": "cannot unmarshall data"})
@@ -65,20 +66,22 @@ func SignUpHandler(c *gin.Context) {
 	}
 
 	if loggedIn {
-		c.JSON(http.StatusOK, gin.H{"message": "loggedin"})
+		c.JSON(http.StatusOK, gin.H{"message": "already logged in"})
 		return
 	}
 
-	var signUpData auth.SignUpData
+	var signUpData auth_repository.UserData
 	if err := c.BindJSON(&signUpData); err != nil {
 		log.Println(err, "error when unmarshalling signup data")
 		c.JSON(http.StatusInternalServerError, gin.H{"message": "cannot unmarshall data"})
 		return
 	}
 
-	// TODO: validate form data
-
-	// TODO: create new user
+	if err := auth.CreateUser(signUpData); err != nil {
+		log.Println(err, "error when signing up")
+		c.JSON(http.StatusInternalServerError, gin.H{"message": "failed to sign up"})
+		return
+	}
 
 	createdSession, err := auth.CreateSession(signUpData.Username)
 	if err != nil {
