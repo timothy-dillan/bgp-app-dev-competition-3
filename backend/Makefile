@@ -2,7 +2,7 @@ build:
 	go build -o main
 
 run:
-	make build && ./main
+	docker-compose up -d && go run main.go
 
 test:
 	go test ./...
