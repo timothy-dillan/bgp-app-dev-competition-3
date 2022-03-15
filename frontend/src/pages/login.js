@@ -5,16 +5,38 @@ import { Input, InputGroup, InputLeftElement, InputRightElement } from "@chakra-
 import { Box, Container, Flex, Heading, Stack } from "@chakra-ui/layout";
 import { chakra } from "@chakra-ui/system";
 import { FaUserAlt, FaLock } from "react-icons/fa";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import api from "../utils/api";
+import { useToast } from '@chakra-ui/react'
 
 const CFaUserAlt = chakra(FaUserAlt);
 const CFaLock = chakra(FaLock);
 
 const LoginPage = () => {
+    const navigate = useNavigate()
+    const toast = useToast()
     const [showPassword, setShowPassword] = useState(false);
     const handleShowClick = () => setShowPassword(!showPassword);
     const [username, setUsername] = useState("")
     const [password, setPassword] = useState("")
+    const handleSubmit = () => {
+        console.log( {username, password})
+        api.post('login', {username, password})
+            .then(res => {
+                if (res.status == 200) {
+                    navigate('/product', {replace: true})
+                    return
+                }
+            }).catch(res => {
+                toast({
+                    title: 'Error',
+                    description: res.data.message,
+                    status: 'error',
+                    duration: 9000,
+                    isClosable: true,
+                  })
+            })
+    }
 
     return (
         <Flex
@@ -39,20 +61,17 @@ const LoginPage = () => {
                             boxShadow="md"
                         >
                             <FormControl>
-                                <Input
-                                    type="text"
-                                    placeholder="Username"
-                                    value={username}
-                                    onChange={event => setUsername(event.currentTarget.value)}
-                                />
-                            </FormControl>
-                            <FormControl>
                                 <InputGroup>
-                                <InputLeftElement
-                                    pointerEvents="none"
-                                    children={<CFaUserAlt color="gray.300" />}
-                                />
-                                <Input placeholder="Username" />
+                                    <InputLeftElement
+                                        pointerEvents="none"
+                                        children={<CFaUserAlt color="gray.300" />}
+                                    />
+                                    <Input
+                                        type="text"
+                                        placeholder="Username"
+                                        value={username}
+                                        onChange={event => setUsername(event.currentTarget.value)}
+                                    />
                                 </InputGroup>
                             </FormControl>
                             <FormControl>
@@ -80,7 +99,7 @@ const LoginPage = () => {
                                 variant="solid"
                                 colorScheme="orange"
                                 width="full"
-                                onClick={() => alert(username + password)}
+                                onClick={handleSubmit}
                             >
                                 Login
                             </Button>
