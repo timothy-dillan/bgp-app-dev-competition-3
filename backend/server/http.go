@@ -2,6 +2,7 @@ package server
 
 import (
 	"backend/server/handlers"
+	"backend/server/middleware"
 
 	"github.com/gin-gonic/gin"
 )
@@ -18,6 +19,12 @@ func InitHTTP() error {
 
 	router.POST("/login", handlers.LogInHandler)
 	router.POST("/signup", handlers.SignUpHandler)
+
+	resource := router.Group("/product")
+	resource.Use(middleware.Authenticate())
+	{
+		resource.POST("/add", handlers.ProductAddHandler)
+	}
 
 	// TODO: Authentication for user-only accessible features
 	/*
