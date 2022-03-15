@@ -68,7 +68,7 @@ const LoginPage = () => {
             </Stack>
             <Box>
                 Don't have an account yet?{" "}
-                <Link color="orange.500" href="#">
+                <Link color="orange.500" to="/signup">
                     Sign Up
                 </Link>
             </Box>
