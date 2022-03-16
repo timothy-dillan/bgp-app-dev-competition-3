@@ -13,6 +13,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import api from '../utils/api';
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
+import { useNavigate } from 'react-router-dom';
 
 const theme = createTheme();
 
@@ -21,6 +22,7 @@ const Alert = React.forwardRef(function Alert(props, ref) {
 });
 
 export default function SignInSide() {
+    const navigate = useNavigate();
     const [open, setOpen] = React.useState(false);
     const [severity, setSeverity] = React.useState("success");
     const [message, setMessage] = React.useState("Successfully logged in.");
@@ -45,12 +47,15 @@ export default function SignInSide() {
 
         api.post('login', { "username": username, "password": password })
             .then(res => {
-                if (res.status === 200) {
-                    showSnackbar();
-                    setSeverity("success");
-                    setMessage("Successfully logged in.");
+                if (res.status !== 200) {
                     return
                 }
+                showSnackbar();
+                setSeverity("success");
+                setMessage("Successfully logged in.");
+                setTimeout(function () {
+                    navigate('/product/list', { replace: true })
+                }, 1200);
             }).catch(res => {
                 showSnackbar();
                 setSeverity("error");
@@ -127,7 +132,7 @@ export default function SignInSide() {
                             >
                                 Sign In
                             </Button>
-                            <Link href="#" variant="body2">
+                            <Link href="/signup" variant="body2">
                                 {"Don't have an account? Sign Up"}
                             </Link>
                         </Box>

@@ -21,33 +21,32 @@ function Copyright() {
 
 const Footer = () => (
   <Box
-  sx={{
-    display: 'flex',
-    flexDirection: 'column',
-    minHeight: '100vh',
-  }}
->
-  <CssBaseline />
-  <Box
-    component="footer"
     sx={{
-      py: 3,
-      px: 2,
-      mt: 'auto',
-      backgroundColor: (theme) =>
-        theme.palette.mode === 'light'
-          ? theme.palette.grey[200]
-          : theme.palette.grey[800],
+      display: 'flex',
+      flexDirection: 'column',
     }}
   >
-    <Container maxWidth="sm">
-      <Typography variant="body1">
-        My sticky footer can be found here.
-      </Typography>
-      <Copyright />
-    </Container>
+    <CssBaseline />
+    <Box
+      component="footer"
+      sx={{
+        py: 3,
+        px: 2,
+        mt: 'auto',
+        backgroundColor: (theme) =>
+          theme.palette.mode === 'light'
+            ? theme.palette.grey[200]
+            : theme.palette.grey[800],
+      }}
+    >
+      <Container maxWidth="sm">
+        <Typography variant="body1">
+          My sticky footer can be found here.
+        </Typography>
+        <Copyright />
+      </Container>
+    </Box>
   </Box>
-</Box>
 )
 
 export default Footer

@@ -6,7 +6,7 @@ CREATE TABLE users (
     id SERIAL PRIMARY KEY,
     display_name varchar(255) NOT NULL,
     username varchar(255) NOT NULL,
-    password varchar(255) NOT NULL,
+    password text NOT NULL,
     gopay_coins_balance float NOT NULL DEFAULT 10000,
     gopay_balance float NOT NULL DEFAULT 100000
 );
