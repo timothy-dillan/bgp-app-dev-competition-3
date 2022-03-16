@@ -1,17 +1,29 @@
 import '../App.css'
+import Header from '../components/header'
 import Footer from "../components/footer";
 import { BidCard } from "../components/bid";
 import { Box, createTheme, Grid, ThemeProvider, Typography } from "@mui/material";
+import Container from '@mui/material/Container';
 
 const BidsPage = () => {
     const theme = createTheme();
 
     return (
         <ThemeProvider theme={theme}>
+            <Header />
             <Grid justifyContent="center">
-                <Typography variant="h2" sx={{ fontWeight: 'bold' }}>
-                    Bids
+            <Container maxWidth="lg">
+                <Typography
+                    component="h1"
+                    variant="h2"
+                    align="center"
+                    color="text.primary"
+                    gutterBottom
+                    sx={{ marginTop: 2 }}
+                >
+                    Bids List
                 </Typography>
+            </Container>
                 <Box sx={{
                     display: 'flex',
                     flexWrap: 'wrap',
