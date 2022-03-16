@@ -4,8 +4,8 @@ import {
   Route
 } from 'react-router-dom'
 import LandingPage from './pages/landing'
-import LoginPage from './pages/Login1'
-import SignUpPage from './pages/SignUp1';
+import LoginPage from './pages/Login'
+import SignUpPage from './pages/SignUp';
 import ReactLanding from './pages/defaultreact'
 import Products from './pages/product';
 import BidsPage from './pages/bids';
