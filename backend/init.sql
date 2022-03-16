@@ -7,8 +7,8 @@ CREATE TABLE users (
     display_name varchar(255) NOT NULL,
     username varchar(255) NOT NULL,
     password text NOT NULL,
-    gopay_coins_balance float NOT NULL,
-    gopay_balance float NOT NULL
+    gopay_coins_balance float NOT NULL DEFAULT 10000,
+    gopay_balance float NOT NULL DEFAULT 100000
 );
 
 INSERT INTO users (display_name, username, password) VALUES ('Alice Wonderland', 'alice', '$2a$10$F2K.H5e0OBugzP2Ichtu8utM3Ns4ekrmHwbEHsg4TESd7MOrYyHAC');
