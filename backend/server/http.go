@@ -20,6 +20,7 @@ func InitHTTP() error {
 
 	router.POST("/login", handlers.LogInHandler)
 	router.POST("/signup", handlers.SignUpHandler)
+	router.GET("/user_id/from_session", handlers.GetUserIDBySessionHandler)
 	router.GET("/product/all", handlers.GetAllProductsHandler)
 
 	productEndpoints := router.Group("/product")

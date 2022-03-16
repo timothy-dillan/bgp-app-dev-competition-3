@@ -1,9 +1,7 @@
-const GetTimeLeft = (endTime) => {
-    endTime = new Date(endTime)
-    var userTimezoneOffset = endTime.getTimezoneOffset() * 60000;
-    let difference = new Date(endTime.getTime() + userTimezoneOffset) - new Date();
-    console.log(new Date());
-    console.log(new Date(endTime.getTime() + userTimezoneOffset));
+const GetTimeDifference = (time) => {
+    time = new Date(time)
+    var userTimezoneOffset = time.getTimezoneOffset() * 60000;
+    let difference = new Date(time.getTime() + userTimezoneOffset) - new Date();
     let timeLeft = {};
 
     if (difference <= 0) {
@@ -20,4 +18,4 @@ const GetTimeLeft = (endTime) => {
     return timeLeft;
 }
 
-export default GetTimeLeft;
+export default GetTimeDifference;

@@ -10,10 +10,10 @@ import Link from '@mui/material/Link';
 
 
 const pages = {
-    'Product List': '/product/list',
-    'My Product': '/product/history',
-    'Bidding List': '',
-    'Add Product': '/product/add'
+    'Explore': '/product/list',
+    'Profile': '/profile',
+    'Bids': '/bids',
+    'Create Products': '/product/add'
 };
 
 const ResponsiveAppBar = () => {

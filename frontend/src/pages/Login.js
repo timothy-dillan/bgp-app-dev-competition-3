@@ -11,9 +11,9 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import api from '../utils/api';
-import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
 import { useNavigate } from 'react-router-dom';
+import { SnackbarAlert } from '../components/SnackbarAlert';
 
 const theme = createTheme();
 
@@ -22,6 +22,7 @@ const Alert = React.forwardRef(function Alert(props, ref) {
 });
 
 export default function SignInSide() {
+
     const navigate = useNavigate();
     const [open, setOpen] = React.useState(false);
     const [severity, setSeverity] = React.useState("success");
@@ -66,11 +67,7 @@ export default function SignInSide() {
 
     return (
         <ThemeProvider theme={theme}>
-            <Snackbar open={open} autoHideDuration={6000} onClose={closeSnackbar}>
-                <Alert onClose={closeSnackbar} severity={severity} sx={{ width: '100%' }}>
-                    {message}
-                </Alert>
-            </Snackbar>
+            <SnackbarAlert open={open} closeSnackbar={closeSnackbar} severity={severity} message={message} />
             <Grid container component="main" sx={{ height: '100vh' }}>
                 <CssBaseline />
                 <Grid

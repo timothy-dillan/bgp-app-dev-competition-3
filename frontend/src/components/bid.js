@@ -11,7 +11,7 @@ export const BidCard = ({ product_name, product_image, my_bid, current_bid, stat
             <CardMedia
                 component="img"
                 height="140"
-                image={require("./sample.jpg")}
+                image={require("./images/sample.jpg")}
             />
             <CardContent>
             <Typography gutterBottom variant="h5" sx={{ fontWeight:'bold '}}>

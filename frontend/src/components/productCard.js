@@ -8,10 +8,29 @@ import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import { CardActionArea } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import GetTimeLeft from '../utils/utils';
+import GetTimeDifference from '../utils/utils';
 
-function GetTimeLeftWording(endTime) {
-    const timeLeft = GetTimeLeft(endTime);
+function GetTimeWording(startTime, endTime) {
+    const timeTo = GetTimeDifference(startTime);
+    if (Object.keys(timeTo).length > 0) {
+        if (timeTo.days > 0) {
+            return `${timeTo.days} days before`
+        }
+
+        if (timeTo.hours > 0) {
+            return `${timeTo.hours} hours before`
+        }
+
+        if (timeTo.minutes > 0) {
+            return `${timeTo.minutes} minutes before`
+        }
+
+        if (timeTo.seconds > 0) {
+            return `${timeTo.seconds} seconds before`
+        }
+    }
+    
+    const timeLeft = GetTimeDifference(endTime);
     if (Object.keys(timeLeft).length <= 0) {
         return "Ended."
     }
@@ -76,7 +95,7 @@ const ProductCard = (props) => {
                                     💵  {product.bidding_price}
                                 </Typography>
                                 <Typography variant="caption" display="block">
-                                    {GetTimeLeftWording(product.end_time)}
+                                    {GetTimeWording(product.start_time, product.end_time)}
                                 </Typography>
                             </Grid>
                         </Grid>

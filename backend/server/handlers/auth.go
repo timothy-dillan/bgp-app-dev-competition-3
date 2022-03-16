@@ -102,3 +102,20 @@ func SignUpHandler(c *gin.Context) {
 	c.SetCookie("bid_auth_session", createdSession, 30*60, "", "", false, true)
 	c.JSON(http.StatusOK, gin.H{"message": "successfully signed up"})
 }
+
+func GetUserIDBySessionHandler(c *gin.Context) {
+	session, err := c.Cookie("bid_auth_session")
+	if err != nil {
+		log.Println(err)
+		c.JSON(http.StatusUnauthorized, gin.H{"message": "not logged in"})
+		return
+	}
+
+	session, err = auth.GetSession(session)
+	if err != nil {
+		log.Println(err, "session may be empty or error returned")
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"data": session})
+}
