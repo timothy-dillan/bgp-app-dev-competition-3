@@ -1,5 +1,7 @@
 import '../App.css'
+import Navbar from '../components/navbar';
 import Footer from "../components/footer";
+import Container from '@mui/material/Container';
 import { BidCard } from "../components/bid";
 import { Box, createTheme, Grid, ThemeProvider, Typography } from "@mui/material";
 
@@ -8,10 +10,27 @@ const BidsPage = () => {
 
     return (
         <ThemeProvider theme={theme}>
+            <Navbar />
+            <Box
+                    sx={{
+                        bgcolor: 'background.paper',
+                        pt: 8,
+                        pb: 6,
+                    }}
+                >
+                    <Container maxWidth="lg">
+                        <Typography
+                            component="h1"
+                            variant="h2"
+                            align="center"
+                            color="text.primary"
+                            gutterBottom
+                        >
+                            Bids List
+                        </Typography>
+                    </Container>
+                </Box>
             <Grid justifyContent="center">
-                <Typography variant="h2" sx={{fontWeight: 'bold'}}>
-                    Bids
-                </Typography>
                 <Box sx={{
                     display: 'flex',
                     flexWrap: 'wrap',

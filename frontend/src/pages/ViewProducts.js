@@ -18,6 +18,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { CardActionArea } from '@mui/material';
 import api from '../utils/api';
 import { useNavigate } from 'react-router-dom';
+import Navbar from '../components/navbar';
 
 const theme = createTheme();
 
@@ -40,46 +41,7 @@ export default function ViewProducts() {
     return (
         <ThemeProvider theme={theme}>
             <CssBaseline />
-            <AppBar
-                position="static"
-                sx={{ borderBottom: (theme) => `1px solid ${theme.palette.divider}` }}
-            >
-                <Toolbar sx={{ flexWrap: 'wrap' }}>
-                    <CameraIcon sx={{ mr: 2 }} />
-                    <Typography variant="h6" color="inherit" noWrap sx={{ flexGrow: 1, textAlign: 'left' }}>
-                        BidSys
-                    </Typography>
-                    <nav>
-                        <Link
-                            variant="button"
-                            color="#fff"
-                            href="#"
-                            sx={{ my: 1, mx: 1.5 }}
-                        >
-                            Features
-                        </Link>
-                        <Link
-                            variant="button"
-                            color="#fff"
-                            href="#"
-                            sx={{ my: 1, mx: 1.5 }}
-                        >
-                            Enterprise
-                        </Link>
-                        <Link
-                            variant="button"
-                            color="#fff"
-                            href="#"
-                            sx={{ my: 1, mx: 1.5 }}
-                        >
-                            Support
-                        </Link>
-                    </nav>
-                    <Button href="/login" color="secondary" variant="outlined" sx={{ my: 1, mx: 1.5 }}>
-                        Login
-                    </Button>
-                </Toolbar>
-            </AppBar>
+            <Navbar />
             <main>
                 {/* Hero unit */}
                 <Box
