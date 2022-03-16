@@ -20,13 +20,21 @@ func InitHTTP() error {
 
 	router.POST("/login", handlers.LogInHandler)
 	router.POST("/signup", handlers.SignUpHandler)
+	router.GET("/product/all", handlers.GetAllProductsHandler)
 
 	productEndpoints := router.Group("/product")
 	productEndpoints.Use(middleware.Authenticate())
 	{
 		productEndpoints.POST("/add", handlers.AddProductHandler)
-		productEndpoints.GET("/all", handlers.GetAllProductsHandler)
 		productEndpoints.GET("/owner/:user_id", handlers.GetProductByUserIDHandler)
+	}
+
+	bidEndpoints := router.Group("/bid")
+	bidEndpoints.Use(middleware.Authenticate())
+	{
+		bidEndpoints.POST("/add", handlers.AddBidHandler)
+		bidEndpoints.GET("/product/:product_id", handlers.GetBidsByProductHandler)
+		bidEndpoints.GET("/user/:user_id", handlers.GetBidsByUserHandler)
 	}
 
 	err := router.Run()
