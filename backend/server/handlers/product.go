@@ -56,3 +56,21 @@ func GetProductByUserIDHandler(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{"message": "successfully retrieved data", "data": products})
 }
+
+func GetProductByIDHandler(c *gin.Context) {
+	productID, err := strconv.ParseInt(c.Param("product_id"), 10, 64)
+	if err != nil {
+		log.Println(err)
+		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"message": "error occurred when retrieving product id"})
+		return
+	}
+
+	product, err := product.GetProductByID(productID)
+	if err != nil {
+		log.Println(err)
+		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"message": "error occurred when retrieving products"})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"message": "successfully retrieved data", "data": product})
+}
