@@ -141,6 +141,7 @@ func StoreBid(b *Bid) error {
 	if err != nil {
 		return err
 	}
+	// invalidate cache to refresh overall data
 	datastore.Cache.Delete(fmt.Sprintf(common.CACHE_PRODUCT_BIDS_KEY, b.ProductID))
 	b.storeBidCache()
 	return nil
