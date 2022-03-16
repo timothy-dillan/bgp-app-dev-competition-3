@@ -28,7 +28,7 @@ func CheckPassword(username, password string) (bool, error) {
 		return false, errors.New("empty username or password")
 	}
 
-	retUserData, err := auth_repository.GetUserData(username)
+	retUserData, err := auth_repository.GetUserDataByUsername(username)
 	if err != nil {
 		return false, err
 	}

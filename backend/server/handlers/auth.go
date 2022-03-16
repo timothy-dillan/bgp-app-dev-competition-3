@@ -46,7 +46,7 @@ func LogInHandler(c *gin.Context) {
 		return
 	}
 
-	userData, err := auth_repository.GetUserData(loginData.Username)
+	userData, err := auth_repository.GetUserDataByUsername(loginData.Username)
 	if err != nil {
 		log.Println(err)
 		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"message": "error occurred when retrieving user information"})

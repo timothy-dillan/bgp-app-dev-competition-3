@@ -17,9 +17,33 @@ import Link from '@mui/material/Link';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { CardActionArea } from '@mui/material';
 import api from '../utils/api';
+import GetTimeLeft from '../utils/utils';
 import { useNavigate } from 'react-router-dom';
 
 const theme = createTheme();
+
+function GetTimeLeftWording(endTime) {
+    const timeLeft = GetTimeLeft(endTime);
+    if (Object.keys(timeLeft).length <= 0) {
+        return "Ended."
+    }
+
+    if (timeLeft.days > 0) {
+        return `${timeLeft.days} days left`
+    }
+
+    if (timeLeft.hours > 0) {
+        return `${timeLeft.hours} hours left`
+    }
+
+    if (timeLeft.minutes > 0) {
+        return `${timeLeft.minutes} minutes left`
+    }
+
+    if (timeLeft.seconds > 0) {
+        return `${timeLeft.seconds} seconds left`
+    }
+}
 
 export default function ViewProducts() {
     const navigate = useNavigate();
@@ -35,7 +59,7 @@ export default function ViewProducts() {
             }).catch(res => {
                 navigate('/login', { replace: true })
             })
-    }, []);
+    }, [navigate]);
 
     return (
         <ThemeProvider theme={theme}>
@@ -116,6 +140,7 @@ export default function ViewProducts() {
                 <Container sx={{ py: 4 }} maxWidth="lg">
                     {/* End hero unit */}
                     <Grid container spacing={4}>
+                        {console.log(products)}
                         {products.map((product) => (
                             <Grid item key={product.id} xs={12} sm={6} md={4}>
                                 <Card
@@ -125,7 +150,7 @@ export default function ViewProducts() {
                                         <CardMedia
                                             component="img"
                                             height="140"
-                                            image="https://source.unsplash.com/random"
+                                            image={product.image}
                                             alt="random"
                                             sx={{ height: "15vw" }}
                                         />
@@ -133,7 +158,7 @@ export default function ViewProducts() {
                                             <Grid container spacing={2}>
                                                 <Grid item xs={8} sx={{ textAlign: 'left' }}>
                                                     <Typography>
-                                                        {"Owner name"}
+                                                        {product.owner}
                                                     </Typography>
                                                     <Typography sx={{ fontWeight: 'bold' }}>
                                                         {product.name}
@@ -147,10 +172,10 @@ export default function ViewProducts() {
                                                         {"Price"}
                                                     </Typography>
                                                     <Typography sx={{ fontWeight: 'bold' }}>
-                                                        💵 90k
+                                                        💵 {product.bidding_price}
                                                     </Typography>
                                                     <Typography variant="caption" display="block">
-                                                        3 minutes left
+                                                        {GetTimeLeftWording(product.end_time)}
                                                     </Typography>
                                                 </Grid>
                                             </Grid>
