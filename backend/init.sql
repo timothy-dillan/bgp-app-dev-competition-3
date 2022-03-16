@@ -6,7 +6,9 @@ CREATE TABLE users (
     id SERIAL PRIMARY KEY,
     display_name varchar(255) NOT NULL,
     username varchar(255) NOT NULL,
-    password varchar(255) NOT NULL
+    password text NOT NULL,
+    gopay_coins_balance float NOT NULL,
+    gopay_balance float NOT NULL
 );
 
 INSERT INTO users (display_name, username, password) VALUES ('Alice Wonderland', 'alice', '$2a$10$F2K.H5e0OBugzP2Ichtu8utM3Ns4ekrmHwbEHsg4TESd7MOrYyHAC');

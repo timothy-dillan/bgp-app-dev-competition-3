@@ -27,7 +27,7 @@ const SignupPage = () => {
         api.post('signup', {"display_name": name, username, password})
             .then(res => {
                 console.log(res)
-                if (res.status == 200) {
+                if (res.status === 200) {
                     navigate('/product', {replace: true})
                 }
             }).catch(res => {
