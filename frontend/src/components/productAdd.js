@@ -7,13 +7,11 @@ import DateTimePicker from '@mui/lab/DateTimePicker';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useEffect, useState } from 'react';
 import api from '../utils/api';
 import { useToast } from '@chakra-ui/react'
-import { height } from '@mui/system';
 
-const theme = createTheme();
+
 
   const ProductAdd = () => {
     const toast = useToast()
@@ -52,7 +50,7 @@ const theme = createTheme();
         })
      }
     return (
-      <ThemeProvider theme={theme}>
+      
       <Stack spacing={2} sx={{paddingX:'20vw', paddingY:'5vh'}} >
       <Typography gutterBottom variant="h5" component="div">
             Create New Item
@@ -86,8 +84,6 @@ const theme = createTheme();
           <Button variant="contained" color="success" onClick={Submit}  sx={{width:270}}>Submit </Button>
         </Stack>
       </Stack>
-      </ThemeProvider>
-      
     )
   }
   
