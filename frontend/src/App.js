@@ -8,6 +8,7 @@ import LoginPage from './pages/login'
 import SignupPage from './pages/signup';
 import ReactLanding from './pages/defaultreact'
 import Products from './pages/product';
+import BidsPage from './pages/bids';
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
       <Route path="/login" element={<LoginPage />} />
       <Route path="/signup" element={<SignupPage />} />      
       <Route path="product/*" element={<Products />} />
+      <Route path="/bids" element={<BidsPage />} />
     </Routes>
    </div>
   );
