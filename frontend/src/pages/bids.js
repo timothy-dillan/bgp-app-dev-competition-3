@@ -9,7 +9,7 @@ const BidsPage = () => {
     return (
         <ThemeProvider theme={theme}>
             <Grid justifyContent="center">
-                <Typography variant="h2" sx={{fontWeight: 'bold'}}>
+                <Typography variant="h2" sx={{ fontWeight: 'bold' }}>
                     Bids
                 </Typography>
                 <Box sx={{
@@ -21,7 +21,7 @@ const BidsPage = () => {
                     maxWidth: 1000,
                     borderRadius: 1,
                     margin: 'auto',
-                    }} justifyContent="center" 
+                }} justifyContent="center"
                 >
                     <BidCard product_name={"Product Sample"} status={"in_progress"} current_bid={"60.000"} my_bid={"15.000"} />
                     <BidCard product_name={"Product Sample"} status={"end"} state={"won"} />

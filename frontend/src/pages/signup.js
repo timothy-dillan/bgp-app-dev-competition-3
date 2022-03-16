@@ -13,7 +13,7 @@ import api from "../utils/api";
 const CFaUserAlt = chakra(FaUserAlt);
 const CFaLock = chakra(FaLock);
 
-const SignupPage = () => {
+const SignUpPage = () => {
     const navigate = useNavigate()
     const toast = useToast()
     const [showPassword, setShowPassword] = useState(false);
@@ -24,11 +24,11 @@ const SignupPage = () => {
     const [name, setName] = useState("")
 
     const handleSubmit = () => {
-        api.post('signup', {"display_name": name, username, password})
+        api.post('signup', { "display_name": name, username, password })
             .then(res => {
                 console.log(res)
                 if (res.status === 200) {
-                    navigate('/product', {replace: true})
+                    navigate('/product', { replace: true })
                 }
             }).catch(res => {
                 toast({
@@ -37,9 +37,9 @@ const SignupPage = () => {
                     status: 'error',
                     duration: 9000,
                     isClosable: true,
-                  })
+                })
             })
-            
+
     }
 
     return (
@@ -64,28 +64,28 @@ const SignupPage = () => {
                             p="1rem"
                             boxShadow="md"
                         >
-                             <FormControl>  
-                                    <Input
-                                        type="text"
-                                        placeholder="Name"
-                                        value={name}
-                                        onChange={event => setName(event.currentTarget.value)}
-                                    />
-                                  
+                            <FormControl>
+                                <Input
+                                    type="text"
+                                    placeholder="Name"
+                                    value={name}
+                                    onChange={event => setName(event.currentTarget.value)}
+                                />
+
                             </FormControl>
                             <FormControl>
                                 <InputGroup>
-                                <InputLeftElement
-                                    pointerEvents="none"
-                                    children={<CFaUserAlt color="gray.300" />}
-                                />
-                                <Input
-                                    type="text"
-                                    placeholder="Username"
-                                    value={username}
-                                    onChange={event => setUsername(event.currentTarget.value)}
-                                />
-                                 </InputGroup>
+                                    <InputLeftElement
+                                        pointerEvents="none"
+                                        children={<CFaUserAlt color="gray.300" />}
+                                    />
+                                    <Input
+                                        type="text"
+                                        placeholder="Username"
+                                        value={username}
+                                        onChange={event => setUsername(event.currentTarget.value)}
+                                    />
+                                </InputGroup>
                             </FormControl>
                             <FormControl>
                                 <InputGroup>
@@ -102,7 +102,7 @@ const SignupPage = () => {
                                     />
                                     <InputRightElement width="4.5rem">
                                         <Button h="1.75rem" size="sm" onClick={handleShowClick}>
-                                        {showPassword ? "Hide" : "Show"}
+                                            {showPassword ? "Hide" : "Show"}
                                         </Button>
                                     </InputRightElement>
                                 </InputGroup>
@@ -130,4 +130,4 @@ const SignupPage = () => {
     );
 };
 
-export default SignupPage
+export default SignUpPage
