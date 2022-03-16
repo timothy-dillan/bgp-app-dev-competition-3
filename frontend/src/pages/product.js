@@ -4,11 +4,15 @@ import {
   } from 'react-router-dom'
   import ProductAdd from '../components/productAdd'
   import Footer from '../components/footer' 
+  import { createTheme, ThemeProvider } from '@mui/material/styles';
+
+
+  const theme = createTheme();
 
 
   const Products = () => {
     return(
-        <>
+      <ThemeProvider theme={theme}>
         <Routes>
             <Route path="/add" element={ <ProductAdd />} />
             <Route path="/*" element={<>
@@ -20,7 +24,7 @@ import {
                             </>} />
 
         </Routes>
-        </>
+        </ThemeProvider>
     )
   }
 
