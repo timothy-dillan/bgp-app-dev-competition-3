@@ -1,24 +1,19 @@
-import {
-    Button,
-    Flex,
-    FormControl,
-    FormLabel,
-    Heading,
-    Input,
-    Stack,
-    useColorModeValue,
-    Center,
-    Image,
-    NumberInput,
-    NumberInputField,
-    NumberInputStepper,
-    NumberIncrementStepper,
-    NumberDecrementStepper,
-  } from '@chakra-ui/react';
+
+import Stack from '@mui/material/Stack';
+import TextField from '@mui/material/TextField';
+import AdapterDateFns from '@mui/lab/AdapterDateFns';
+import LocalizationProvider from '@mui/lab/LocalizationProvider';
+import DateTimePicker from '@mui/lab/DateTimePicker';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Typography from '@mui/material/Typography';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useEffect, useState } from 'react';
-import {RangeDatepicker} from 'chakra-dayzed-datepicker'
 import api from '../utils/api';
 import { useToast } from '@chakra-ui/react'
+import { height } from '@mui/system';
+
+const theme = createTheme();
 
   const ProductAdd = () => {
     const toast = useToast()
@@ -27,7 +22,8 @@ import { useToast } from '@chakra-ui/react'
     const [Name, SetName] = useState("")
     const [price, setprice] = useState(0)
     const [desc, setdesc] = useState("")
-    const [selectedDates, setSelectedDates] = useState([new Date(), new Date()]);
+    const [start, setStart] = useState(new Date());
+    const [end, setEnd] = useState(new Date());
     useEffect(() => {
       SetSrc(createImageURL(Img)) 
     }, [Img])
@@ -41,7 +37,7 @@ import { useToast } from '@chakra-ui/react'
      }
 
      const Submit = () => {
-       let payload = {"id":0, "original_owner":0, "owner": 0, "name": Name, "image": Src, "description": desc, "price_determinant": parseInt(price), "start_time": selectedDates[0], "end_time": selectedDates[1] }
+       let payload = {"id":0, "original_owner":0, "owner": 0, "name": Name, "image": Src, "description": desc, "price_determinant": parseInt(price), "start_time": start, "end_time": end }
        api.post('product/add',payload)
         .then(res => {
           toast({
@@ -56,88 +52,42 @@ import { useToast } from '@chakra-ui/react'
         })
      }
     return (
-      <Flex
-      minH={'100vh'}
-      align={'center'}
-      justify={'center'}
-      bg={useColorModeValue('gray.50', 'gray.800')}>
-      <Stack
-        spacing={4}
-        w={'full'}
-        maxW={'md'}
-        bg={useColorModeValue('white', 'gray.700')}
-        rounded={'xl'}
-        boxShadow={'lg'}
-        p={6}
-        my={12}>
-        <Heading lineHeight={1.1} fontSize={{ base: '2xl', sm: '3xl' }}>
-        Create New Item
-        </Heading>
-        <FormControl id="image">
-          <FormLabel>Image</FormLabel>
-          <Stack direction={['column', 'row']} spacing={6}>
-            <Center>
+      <ThemeProvider theme={theme}>
+      <Stack spacing={2} sx={{paddingX:'20vw', paddingY:'5vh'}} >
+      <Typography gutterBottom variant="h5" component="div">
+            Create New Item
+          </Typography>
+        <Stack spacing={2}  justifyContent="center" alignItems="center">
               <input id="imgholder" type="file" style={{display:"none"}} onChange={event => SetImage(event.currentTarget.files[0])} />
-              <Image boxSize='200px' src={Src} onClick={ () => document.getElementById("imgholder").click()} />
-            </Center>
-          </Stack>
-        </FormControl>
-        <FormControl id="productName" isRequired>
-          <FormLabel>Product Name</FormLabel>
-          <Input
-            placeholder="ProductName"
-            _placeholder={{ color: 'gray.500' }}
-            type="text"
-            value={Name}
-            onChange={event => { SetName(event.currentTarget.value)}}
-          />
-        </FormControl>
-        <FormControl id="productDesc" isRequired>
-          <FormLabel>Product Description</FormLabel>
-          <Input
-            placeholder="Product Description"
-            _placeholder={{ color: 'gray.500' }}
-            type="text"
-            value={desc}
-            onChange={event => { setdesc(event.currentTarget.value)}}
-          />
-        </FormControl>
-        <FormControl id="productPrice" isRequired>
-          <FormLabel>Product Price</FormLabel>
-          <NumberInput value={price} onChange={event => {setprice(event)}} >
-            <NumberInputField />
-          </NumberInput>
-        </FormControl>
-        <FormControl id="StartTime" isRequired>
-          <FormLabel>Bid Start Time</FormLabel>
-          <RangeDatepicker
-            selectedDates={selectedDates}
-            onDateChange={setSelectedDates}
-          />
-        </FormControl>
-        <Stack spacing={6} direction={['column', 'row']}>
-          <Button
-            bg={'red.400'}
-            color={'white'}
-            w="full"
-            _hover={{
-              bg: 'red.500',
-            }}>
-            Cancel
-          </Button>
-          <Button
-            bg={'blue.400'}
-            color={'white'}
-            w="full"
-            _hover={{
-              bg: 'blue.500',
-            }}
-            onClick={Submit}>
-            Submit
-          </Button>
+              <Box component="span" sx={{width: 400, height: 400, border: '1px dashed grey', }} onClick={ () => document.getElementById("imgholder").click()}>
+                <img src={Src} width="300" height="300" style={{height:'100%', width:'100%'}} />
+              </Box>
+              <TextField label="Product Name" id="outlined-size-normal" value={Name} onChange={event => { SetName(event.currentTarget.value)}} sx={{width: 600}}/>
+              <TextField label="Product Description" id="outlined-size-normal"  value={desc} onChange={event => { setdesc(event.currentTarget.value)}}  sx={{width: 600}}/>
+              <TextField label="Product Price" id="outlined-size-normal" value={price} onChange={event => {setprice(event.currentTarget.value)}} inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}  sx={{width: 600}} />
+              <LocalizationProvider dateAdapter={AdapterDateFns} style={{width: 600}}>
+                <DateTimePicker
+                    label="Start Time"
+                    value={start}
+                    onChange={setStart}
+                    renderInput={(params) => <TextField {...params} style={{width: 600}}/>}
+                    
+                />
+                 <DateTimePicker
+                    label="End Time"
+                    value={end}
+                    onChange={setEnd}
+                    renderInput={(params) => <TextField {...params} style={{width: 600}}/>}
+                />
+              </LocalizationProvider>
+        </Stack>
+        <Stack direction="row" spacing={5}  justifyContent="center" alignItems="center">
+          <Button variant="contained" color="error" sx={{width:270}}>Cancel </Button>
+          <Button variant="contained" color="success" onClick={Submit}  sx={{width:270}}>Submit </Button>
         </Stack>
       </Stack>
-    </Flex>
+      </ThemeProvider>
+      
     )
   }
   
