@@ -27,6 +27,7 @@ func InitHTTP() error {
 	{
 		productEndpoints.POST("/add", handlers.AddProductHandler)
 		productEndpoints.GET("/owner/:user_id", handlers.GetProductByUserIDHandler)
+		productEndpoints.GET("/detail/:product_id", handlers.GetProductByIDHandler)
 	}
 
 	bidEndpoints := router.Group("/bid")

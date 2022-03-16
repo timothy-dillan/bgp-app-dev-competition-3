@@ -55,3 +55,12 @@ func GetProductsOwnedByUser(userID int64) ([]product_repository.Product, error) 
 
 	return products, nil
 }
+
+func GetProductByID(productID int64) (product_repository.Product, error) {
+	product, err := product_repository.GetProductByID(productID)
+	if err != nil {
+		return product_repository.Product{}, err
+	}
+
+	return product, nil
+}
