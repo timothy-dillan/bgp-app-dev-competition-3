@@ -16,13 +16,18 @@ import {
     NumberDecrementStepper,
   } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
+import {RangeDatepicker} from 'chakra-dayzed-datepicker'
+import api from '../utils/api';
+import { useToast } from '@chakra-ui/react'
 
   const ProductAdd = () => {
+    const toast = useToast()
     const [Img, SetImage] = useState({})
     const [Src, SetSrc] = useState("")
     const [Name, SetName] = useState("")
-    const [Price, SetPrice] = useState(0)
-    const [Rate, SetRate] = useState(0)
+    const [price, setprice] = useState(0)
+    const [desc, setdesc] = useState("")
+    const [selectedDates, setSelectedDates] = useState([new Date(), new Date()]);
     useEffect(() => {
       SetSrc(createImageURL(Img)) 
     }, [Img])
@@ -36,7 +41,19 @@ import { useEffect, useState } from 'react';
      }
 
      const Submit = () => {
-      alert(Name + Rate + Price + Img)
+       let payload = {"id":0, "original_owner":0, "owner": 0, "name": Name, "image": Src, "description": desc, "price_determinant": parseInt(price), "start_time": selectedDates[0], "end_time": selectedDates[1] }
+       api.post('product/add',payload)
+        .then(res => {
+          toast({
+            title: 'Success',
+            description: res.data.message,
+            status: 'success',
+            duration: 9000,
+            isClosable: true,
+          })
+        }).catch(res => {
+          console.log(res)
+        })
      }
     return (
       <Flex
@@ -75,21 +92,28 @@ import { useEffect, useState } from 'react';
             onChange={event => { SetName(event.currentTarget.value)}}
           />
         </FormControl>
+        <FormControl id="productDesc" isRequired>
+          <FormLabel>Product Description</FormLabel>
+          <Input
+            placeholder="Product Description"
+            _placeholder={{ color: 'gray.500' }}
+            type="text"
+            value={desc}
+            onChange={event => { setdesc(event.currentTarget.value)}}
+          />
+        </FormControl>
         <FormControl id="productPrice" isRequired>
           <FormLabel>Product Price</FormLabel>
-          <NumberInput value={Price} onChange={event => {SetPrice(event)}} >
+          <NumberInput value={price} onChange={event => {setprice(event)}} >
             <NumberInputField />
           </NumberInput>
         </FormControl>
-        <FormControl id="productRate" isRequired>
-          <FormLabel>Product Price Rate</FormLabel>
-          <NumberInput defaultValue={15} min={10} max={200} value={Rate} onChange={event => SetRate(event)}>
-            <NumberInputField />
-            <NumberInputStepper>
-              <NumberIncrementStepper />
-              <NumberDecrementStepper />
-            </NumberInputStepper>
-          </NumberInput>
+        <FormControl id="StartTime" isRequired>
+          <FormLabel>Bid Start Time</FormLabel>
+          <RangeDatepicker
+            selectedDates={selectedDates}
+            onDateChange={setSelectedDates}
+          />
         </FormControl>
         <Stack spacing={6} direction={['column', 'row']}>
           <Button
