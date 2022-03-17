@@ -1,7 +1,5 @@
 const GetTimeDifference = (time) => {
-    time = new Date(time)
-    var userTimezoneOffset = time.getTimezoneOffset() * 60000;
-    let difference = new Date(time.getTime() + userTimezoneOffset) - new Date();
+    let difference = new Date(time) - new Date();
     let timeLeft = {};
 
     if (difference <= 0) {

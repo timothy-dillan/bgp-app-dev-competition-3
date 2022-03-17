@@ -175,6 +175,7 @@ const ProductDetail = () => {
                         }
                         showSnackbar("success", res.data.message);
                         getBids(id);
+                        getProductDetail(id);
                     }).catch(res => {
                         showSnackbar("error", res.response.data.message);
                         if (res.response.status === 401) {
