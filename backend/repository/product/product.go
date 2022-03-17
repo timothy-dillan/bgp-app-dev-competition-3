@@ -141,6 +141,7 @@ func StoreProduct(p *Product) error {
 	}
 	// invalidate cache to refresh overall data
 	datastore.Cache.Delete(common.CACHE_PRODUCTS_KEY)
+	datastore.Cache.Delete(fmt.Sprintf(common.CACHE_USER_PRODUCTS_KEY, p.OriginalOwner))
 	p.storeProductCache()
 	return nil
 }
