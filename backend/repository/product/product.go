@@ -139,6 +139,8 @@ func StoreProduct(p *Product) error {
 	if err != nil {
 		return err
 	}
+	// invalidate cache to refresh overall data
+	datastore.Cache.Delete(common.CACHE_PRODUCTS_KEY)
 	p.storeProductCache()
 	return nil
 }
