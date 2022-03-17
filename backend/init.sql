@@ -25,7 +25,7 @@ CREATE TABLE products (
     end_time TIMESTAMP NOT NULL
 );
 
-INSERT INTO products (name, description, image, price_determinant, owner, original_owner, start_time, end_time) VALUES ('Test product', 'Lorem ipsum dolor sit amet.', 'https://static.wikia.nocookie.net/youtube/images/c/ce/RickRollButWithADifferentLink.jpg/revision/latest?cb=20201023192005', 5, 1, 1, '2022-03-16 00:00:00', '2022-03-16 23:59:59');
+INSERT INTO products (name, description, image, price_determinant, owner, original_owner, start_time, end_time) VALUES ('Test product', 'Lorem ipsum dolor sit amet.', https://source.unsplash.com/random, 5, 1, 1, '2022-03-16 00:00:00', '2022-03-18 23:59:59');
 
 CREATE TABLE biddings (
     id SERIAL PRIMARY KEY,
