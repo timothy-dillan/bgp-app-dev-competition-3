@@ -11,7 +11,6 @@ import Link from '@mui/material/Link';
 
 const pages = {
     'Explore': '/product/list',
-    'Profile': '/profile',
     'Bids': '/bids',
     'Create Products': '/product/add'
 };
@@ -49,7 +48,7 @@ const ResponsiveAppBar = () => {
                             </Link>
                         ))}
                     </nav>
-                    <Button href="/login" color="secondary" variant="outlined" sx={{ my: 1, mx: 1.5 }}>
+                    <Button href="/login" color="secondary" variant="outlined" sx={{ my: 1, mx: 1.5, color: "white" }}>
                         Login
                     </Button>
                 </Toolbar>

@@ -110,7 +110,7 @@ func getBidsFromDB(query string, args ...interface{}) ([]Bid, error) {
 
 func getBidByIDFromCache(bidID int64) (Bid, error) {
 	var product Bid
-	recBid, err := datastore.Cache.Get(fmt.Sprintf(common.CACHE_PRODUCT_DATA_KEY, bidID))
+	recBid, err := datastore.Cache.Get(fmt.Sprintf(common.CACHE_BID_KEY, bidID))
 	if err != nil {
 		return Bid{}, err
 	}
@@ -136,12 +136,13 @@ func getBidByIDFromDB(bidID int64) (Bid, error) {
 	return bid, nil
 }
 
-func StoreBid(p *Bid) error {
-	err := p.storeBidDB()
+func StoreBid(b *Bid) error {
+	err := b.storeBidDB()
 	if err != nil {
 		return err
 	}
-	p.storeBidCache()
+	datastore.Cache.Delete(fmt.Sprintf(common.CACHE_PRODUCT_BIDS_KEY, b.ProductID))
+	b.storeBidCache()
 	return nil
 }
 
@@ -150,7 +151,7 @@ func (b Bid) storeBidCache() error {
 	if err != nil {
 		return err
 	}
-	err = datastore.Cache.Set(fmt.Sprintf(common.CACHE_PRODUCT_DATA_KEY, b.ID), parsedBid)
+	err = datastore.Cache.Set(fmt.Sprintf(common.CACHE_BID_KEY, b.ID), parsedBid)
 	if err != nil {
 		return err
 	}
@@ -158,7 +159,7 @@ func (b Bid) storeBidCache() error {
 }
 
 func (b *Bid) storeBidDB() error {
-	err := datastore.DB.QueryRow(common.DB_INSERT_BID_QUERY, b.ID, b.Bidder, b.ProductID, b.BiddingPrice).Scan(&b.ID)
+	err := datastore.DB.QueryRow(common.DB_INSERT_BID_QUERY, b.Bidder, b.ProductID, b.BiddingPrice).Scan(&b.ID)
 	if err != nil {
 		return err
 	}

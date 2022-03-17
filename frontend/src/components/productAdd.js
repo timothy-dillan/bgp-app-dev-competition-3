@@ -62,23 +62,27 @@ const ProductAdd = () => {
             setMessage("Successfully added product.");
             setTimeout(function () {
               navigate('/product/list', { replace: true })
-            }, 1000);
+            }, 1200);
           }).catch(res => {
             showSnackbar();
             setSeverity("error");
-            setMessage("Failed to add product.");
+            setMessage(res.response.data.message);
             console.log(res)
-            setTimeout(function () {
-              navigate('/login', { replace: true })
-            }, 1000);
+            if (res.response.status === 401) {
+              setTimeout(function () {
+                navigate('/login', { replace: true })
+              }, 1500);
+            }
           })
       }).catch(res => {
         setSeverity("error");
-        setMessage("Failed to add product.");
+        setMessage(res.response.data.message);
         console.log(res)
-        setTimeout(function () {
-          navigate('/login', { replace: true })
-        }, 1000);
+        if (res.response.status === 401) {
+          setTimeout(function () {
+            navigate('/login', { replace: true })
+          }, 1500);
+        }
       })
   };
 

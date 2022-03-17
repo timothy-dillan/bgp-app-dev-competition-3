@@ -3,6 +3,7 @@ package handlers
 import (
 	bid "backend/internal/bid"
 	bid_repository "backend/repository/bid"
+	"fmt"
 	"log"
 	"net/http"
 	"strconv"
@@ -21,11 +22,11 @@ func AddBidHandler(c *gin.Context) {
 	err := bid.CreateBid(&bidData)
 	if err != nil {
 		log.Println(err)
-		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"message": "error occurred when creating bid"})
+		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"message": fmt.Sprintf("%s", err)})
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"message": "successfully stored"})
+	c.JSON(http.StatusOK, gin.H{"message": "Successfully placed bid."})
 }
 
 func GetBidsByProductHandler(c *gin.Context) {

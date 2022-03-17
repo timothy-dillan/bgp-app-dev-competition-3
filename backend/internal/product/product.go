@@ -24,22 +24,9 @@ func GetProducts() ([]ProductData, error) {
 
 	var productDatas []ProductData
 	for _, product := range products {
-		userData, err := auth_repository.GetUserDataByID(product.Owner)
+		productData, err := getProductData(product)
 		if err != nil {
 			return nil, err
-		}
-		bidData, err := bid_repository.GetBidsByProductID(product.ID)
-		if err != nil {
-			return nil, err
-		}
-		var biddingPrice float64
-		if len(bidData) > 0 {
-			biddingPrice = bidData[0].BiddingPrice
-		}
-		productData := ProductData{
-			Product:      product,
-			OwnerName:    userData.DisplayName,
-			BiddingPrice: biddingPrice,
 		}
 		productDatas = append(productDatas, productData)
 	}
@@ -56,11 +43,37 @@ func GetProductsOwnedByUser(userID int64) ([]product_repository.Product, error) 
 	return products, nil
 }
 
-func GetProductByID(productID int64) (product_repository.Product, error) {
+func GetProductByID(productID int64) (ProductData, error) {
 	product, err := product_repository.GetProductByID(productID)
 	if err != nil {
-		return product_repository.Product{}, err
+		return ProductData{}, err
 	}
 
-	return product, nil
+	productData, err := getProductData(product)
+	if err != nil {
+		return ProductData{}, err
+	}
+
+	return productData, nil
+}
+
+func getProductData(product product_repository.Product) (ProductData, error) {
+	userData, err := auth_repository.GetUserDataByID(product.Owner)
+	if err != nil {
+		return ProductData{}, err
+	}
+	bidData, err := bid_repository.GetBidsByProductID(product.ID)
+	if err != nil {
+		return ProductData{}, err
+	}
+	var biddingPrice float64
+	if len(bidData) > 0 {
+		biddingPrice = bidData[0].BiddingPrice
+	}
+	productData := ProductData{
+		Product:      product,
+		OwnerName:    userData.DisplayName,
+		BiddingPrice: biddingPrice,
+	}
+	return productData, nil
 }

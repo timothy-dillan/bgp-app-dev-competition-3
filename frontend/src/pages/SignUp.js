@@ -1,133 +1,144 @@
-import { useState } from "react";
-import { Button } from "@chakra-ui/button";
-import { FormControl } from "@chakra-ui/form-control";
-import { Input, InputGroup, InputLeftElement, InputRightElement } from "@chakra-ui/input";
-import { Box, Container, Flex, Heading, Stack } from "@chakra-ui/layout";
-import { chakra } from "@chakra-ui/system";
-import { FaUserAlt, FaLock } from "react-icons/fa";
-import { Link, useNavigate } from "react-router-dom";
-import { useToast } from '@chakra-ui/react'
+import * as React from 'react';
+import Avatar from '@mui/material/Avatar';
+import Button from '@mui/material/Button';
+import CssBaseline from '@mui/material/CssBaseline';
+import TextField from '@mui/material/TextField';
+import Link from '@mui/material/Link';
+import Paper from '@mui/material/Paper';
+import Box from '@mui/material/Box';
+import Grid from '@mui/material/Grid';
+import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+import Typography from '@mui/material/Typography';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+import api from '../utils/api';
+import { useNavigate } from 'react-router-dom';
+import { SnackbarAlert } from '../components/SnackbarAlert';
 
-import api from "../utils/api";
+const theme = createTheme();
 
-const CFaUserAlt = chakra(FaUserAlt);
-const CFaLock = chakra(FaLock);
+export default function SignupPage() {
 
-const SignupPage = () => {
-    const navigate = useNavigate()
-    const toast = useToast()
-    const [showPassword, setShowPassword] = useState(false);
-    const handleShowClick = () => setShowPassword(!showPassword);
+    const navigate = useNavigate();
+    const [open, setOpen] = React.useState(false);
+    const [severity, setSeverity] = React.useState("success");
+    const [message, setMessage] = React.useState("Successfully logged in.");
 
-    const [username, setUsername] = useState("")
-    const [password, setPassword] = useState("")
-    const [name, setName] = useState("")
+    const showSnackbar = () => {
+        setOpen(true);
+    };
 
-    const handleSubmit = () => {
-        api.post('signup', {"display_name": name, username, password})
+    const closeSnackbar = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+
+        setOpen(false);
+    };
+
+    const handleSubmit = (event) => {
+        event.preventDefault();
+        const data = new FormData(event.currentTarget);
+
+        api.post('signup', { "display_name": data.get('display_name'), "username": data.get('username'), "password": data.get('password') })
             .then(res => {
-                console.log(res)
-                if (res.status === 200) {
-                    navigate('/product', {replace: true})
+                if (res.status !== 200) {
+                    return
                 }
+                showSnackbar();
+                setSeverity("success");
+                setMessage("Successfully signed up.");
+                setTimeout(function () {
+                    navigate('/product/list', { replace: true })
+                }, 1200);
             }).catch(res => {
-                toast({
-                    title: 'Error',
-                    description: "failed to create",
-                    status: 'error',
-                    duration: 9000,
-                    isClosable: true,
-                  })
+                showSnackbar();
+                setSeverity("error");
+                setMessage("Failed to sign up.");
+                return
             })
-            
-    }
+    };
 
     return (
-        <Flex
-            flexDirection="column"
-            width="100vw"
-            height="100vh"
-            justifyContent="center"
-            alignItems="center"
-        >
-            <Stack
-                flexDir="column"
-                mb="2"
-                justifyContent="center"
-                alignItems="center"
-            >
-                <Heading color="">Sign Up</Heading>
-                <Box minW={{ base: "90%", md: "468px" }}>
-                    <form>
-                        <Stack
-                            spacing={4}
-                            p="1rem"
-                            boxShadow="md"
-                        >
-                             <FormControl>  
-                                    <Input
-                                        type="text"
-                                        placeholder="Name"
-                                        value={name}
-                                        onChange={event => setName(event.currentTarget.value)}
-                                    />
-                                  
-                            </FormControl>
-                            <FormControl>
-                                <InputGroup>
-                                <InputLeftElement
-                                    pointerEvents="none"
-                                    children={<CFaUserAlt color="gray.300" />}
-                                />
-                                <Input
-                                    type="text"
-                                    placeholder="Username"
-                                    value={username}
-                                    onChange={event => setUsername(event.currentTarget.value)}
-                                />
-                                 </InputGroup>
-                            </FormControl>
-                            <FormControl>
-                                <InputGroup>
-                                    <InputLeftElement
-                                        pointerEvents="none"
-                                        color="gray.500"
-                                        children={<CFaLock color="gray.300" />}
-                                    />
-                                    <Input
-                                        type={showPassword ? "text" : "password"}
-                                        placeholder="Password"
-                                        value={password}
-                                        onChange={event => setPassword(event.currentTarget.value)}
-                                    />
-                                    <InputRightElement width="4.5rem">
-                                        <Button h="1.75rem" size="sm" onClick={handleShowClick}>
-                                        {showPassword ? "Hide" : "Show"}
-                                        </Button>
-                                    </InputRightElement>
-                                </InputGroup>
-                            </FormControl>
+        <ThemeProvider theme={theme}>
+            <SnackbarAlert open={open} closeSnackbar={closeSnackbar} severity={severity} message={message} />
+            <Grid container component="main" sx={{ height: '100vh' }}>
+                <CssBaseline />
+                <Grid
+                    item
+                    xs={false}
+                    sm={4}
+                    md={7}
+                    sx={{
+                        backgroundImage: 'url(https://source.unsplash.com/random)',
+                        backgroundRepeat: 'no-repeat',
+                        backgroundColor: (t) =>
+                            t.palette.mode === 'light' ? t.palette.grey[50] : t.palette.grey[900],
+                        backgroundSize: 'cover',
+                        backgroundPosition: 'center',
+                    }}
+                />
+                <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
+                    <Box
+                        sx={{
+                            my: 8,
+                            mx: 4,
+                            display: 'flex',
+                            flexDirection: 'column',
+                            alignItems: 'center',
+                        }}
+                    >
+                        <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+                            <LockOutlinedIcon />
+                        </Avatar>
+                        <Typography component="h1" variant="h5">
+                            Sign Up
+                        </Typography>
+                        <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}>
+                            <TextField
+                                margin="normal"
+                                required
+                                fullWidth
+                                id="display_name"
+                                label="Display Name"
+                                name="display_name"
+                                autoComplete="display_name"
+                                autoFocus
+                            />
+                            <TextField
+                                margin="normal"
+                                required
+                                fullWidth
+                                id="username"
+                                label="Username"
+                                name="username"
+                                autoComplete="username"
+                                autoFocus
+                            />
+                            <TextField
+                                margin="normal"
+                                required
+                                fullWidth
+                                name="password"
+                                label="Password"
+                                type="password"
+                                id="password"
+                                autoComplete="current-password"
+                            />
                             <Button
-                                borderRadius={0}
-                                variant="solid"
-                                colorScheme="orange"
-                                width="full"
-                                onClick={handleSubmit}
+                                type="submit"
+                                fullWidth
+                                variant="contained"
+                                sx={{ mt: 3, mb: 2 }}
                             >
                                 Sign Up
                             </Button>
-                        </Stack>
-                    </form>
-                </Box>
-            </Stack>
-            <Box>
-                Already have an account?{" "}
-                <Link color="orange.500" to="/login">
-                    Login
-                </Link>
-            </Box>
-        </Flex>
+                            <Link href="/login" variant="body2">
+                                {"Already have an account? Sign In"}
+                            </Link>
+                        </Box>
+                    </Box>
+                </Grid>
+            </Grid>
+        </ThemeProvider>
     );
-};
-
-export default SignupPage
+}

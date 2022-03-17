@@ -11,15 +11,10 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import api from '../utils/api';
-import MuiAlert from '@mui/material/Alert';
 import { useNavigate } from 'react-router-dom';
 import { SnackbarAlert } from '../components/SnackbarAlert';
 
 const theme = createTheme();
-
-const Alert = React.forwardRef(function Alert(props, ref) {
-    return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
-});
 
 export default function SignInSide() {
 

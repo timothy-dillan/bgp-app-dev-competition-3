@@ -8,7 +8,7 @@ import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import { CardActionArea } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import GetTimeDifference from '../utils/utils';
+import { GetTimeDifference, PriceFormatter } from '../utils/utils';
 
 function GetTimeWording(startTime, endTime) {
     const timeTo = GetTimeDifference(startTime);
@@ -92,7 +92,7 @@ const ProductCard = (props) => {
                                     {"Price"}
                                 </Typography>
                                 <Typography sx={{ fontWeight: 'bold' }}>
-                                    💵  {product.bidding_price}
+                                    💵  {PriceFormatter(product.bidding_price)}
                                 </Typography>
                                 <Typography variant="caption" display="block">
                                     {GetTimeWording(product.start_time, product.end_time)}
