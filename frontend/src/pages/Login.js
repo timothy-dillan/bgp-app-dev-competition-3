@@ -48,14 +48,14 @@ export default function SignInSide() {
                 }
                 showSnackbar();
                 setSeverity("success");
-                setMessage("Successfully logged in.");
+                setMessage(res.data.message);
                 setTimeout(function () {
                     navigate('/product/list', { replace: true })
                 }, 1200);
             }).catch(res => {
                 showSnackbar();
                 setSeverity("error");
-                setMessage("Failed to log in.");
+                setMessage(res.response.data.message);
                 return
             })
     };

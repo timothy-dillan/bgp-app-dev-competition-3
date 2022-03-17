@@ -8,7 +8,6 @@ import CameraIcon from '@mui/icons-material/PhotoCamera';
 import CssBaseline from '@mui/material/CssBaseline';
 import Link from '@mui/material/Link';
 
-
 const pages = {
     'Explore': '/product/list',
     'Bids': '/bids',
@@ -48,7 +47,7 @@ const ResponsiveAppBar = () => {
                             </Link>
                         ))}
                     </nav>
-                    <Button href="/login" color="secondary" variant="outlined" sx={{ my: 1, mx: 1.5, color: "white" }}>
+                    <Button href="/login" color="secondary" variant="filled" sx={{ my: 1, mx: 1.5, color: "white" }}>
                         Login
                     </Button>
                 </Toolbar>

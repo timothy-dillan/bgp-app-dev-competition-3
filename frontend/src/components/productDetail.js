@@ -177,13 +177,20 @@ const ProductDetail = () => {
                         getBids(id);
                     }).catch(res => {
                         showSnackbar("error", res.response.data.message);
+                        if (res.response.status === 401) {
+                            setTimeout(function () {
+                                navigate('/login', { replace: true })
+                            }, 1500);
+                        }
                     })
             }).catch(res => {
                 console.log(res)
                 showSnackbar("error", res.response.data.message);
-                /*setTimeout(function () {
-                    navigate('/login', { replace: true })
-                }, 1000);*/
+                if (res.response.status === 401) {
+                    setTimeout(function () {
+                        navigate('/login', { replace: true })
+                    }, 1500);
+                }
             })
     }
 
@@ -197,7 +204,12 @@ const ProductDetail = () => {
                     setProduct(res.data.data)
                 }
             }).catch(res => {
-                navigate('/login', { replace: true })
+                showSnackbar("error", res.response.data.message);
+                if (res.response.status === 401) {
+                    setTimeout(function () {
+                        navigate('/login', { replace: true })
+                    }, 1500);
+                }
             })
     }
 
@@ -211,7 +223,12 @@ const ProductDetail = () => {
                     setBids(res.data.data)
                 }
             }).catch(res => {
-                navigate('/login', { replace: true })
+                showSnackbar("error", res.response.data.message);
+                if (res.response.status === 401) {
+                    setTimeout(function () {
+                        navigate('/login', { replace: true })
+                    }, 1500);
+                }
             })
     }
 
@@ -300,7 +317,6 @@ const ProductDetail = () => {
                                     <TableBody>
                                         {bids.map((bid) => (
                                             <TableRow
-                                                key={bid.bidder_name}
                                                 sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                                             >
                                                 <TableCell component="th" scope="row">

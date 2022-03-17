@@ -11,18 +11,13 @@ func InitHTTP() error {
 	router := gin.Default()
 	router.Use(middleware.CORSConfiguration())
 
-	// TODO: add routes
-	router.GET("/ping", func(c *gin.Context) {
-		c.JSON(200, gin.H{
-			"message": "pong",
-		})
-	})
-
+	// General endpoints which can be access by all.
 	router.POST("/login", handlers.LogInHandler)
 	router.POST("/signup", handlers.SignUpHandler)
-	router.GET("/user_id/from_session", handlers.GetUserIDBySessionHandler)
+	router.GET("/user_id/from_session", middleware.Authenticate(), handlers.GetUserIDBySessionHandler)
 	router.GET("/product/all", handlers.GetAllProductsHandler)
 
+	// Product-related endpoints accessible only to users
 	productEndpoints := router.Group("/product")
 	productEndpoints.Use(middleware.Authenticate())
 	{
@@ -31,6 +26,7 @@ func InitHTTP() error {
 		productEndpoints.GET("/detail/:product_id", handlers.GetProductByIDHandler)
 	}
 
+	// Bid-related endpoints accessible only to users
 	bidEndpoints := router.Group("/bid")
 	bidEndpoints.Use(middleware.Authenticate())
 	{

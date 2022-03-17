@@ -46,14 +46,14 @@ export default function SignupPage() {
                 }
                 showSnackbar();
                 setSeverity("success");
-                setMessage("Successfully signed up.");
+                setMessage(res.data.message);
                 setTimeout(function () {
                     navigate('/product/list', { replace: true })
                 }, 1200);
             }).catch(res => {
                 showSnackbar();
                 setSeverity("error");
-                setMessage("Failed to sign up.");
+                setMessage(res.response.data.message);
                 return
             })
     };
@@ -112,7 +112,6 @@ export default function SignupPage() {
                                 label="Username"
                                 name="username"
                                 autoComplete="username"
-                                autoFocus
                             />
                             <TextField
                                 margin="normal"
