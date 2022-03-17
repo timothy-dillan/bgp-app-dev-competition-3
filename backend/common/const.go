@@ -36,14 +36,6 @@ const (
 	DB_GET_BIDS_QUERY              = "SELECT id, bidder, product_id, bidding_price FROM biddings"
 	DB_GET_BID_BY_ID_QUERY         = DB_GET_BIDS_QUERY + " WHERE id = $1 ORDER BY id desc;"
 	DB_GET_BID_BY_PRODUCT_ID_QUERY = DB_GET_BIDS_QUERY + " WHERE product_id = $1 ORDER BY id desc;"
-	DB_GET_BID_BY_USER_ID_QUERY    = `SELECT DISTINCT b1.id, b1.bidder, b1.product_id, b1.bidding_price
-									FROM biddings b1
-									INNER JOIN
-										(SELECT bidder, product_id, MAX(bidding_price) AS MaxBiddingPrice
-										FROM biddings
-										GROUP BY bidder, product_id) b2 
-									ON b1.bidder = b2.bidder
-									AND b1.bidding_price = b2.MaxBiddingPrice
-									AND b1.bidder = $1 ORDER BY b1.id desc;`
-	DB_INSERT_BID_QUERY = "INSERT INTO biddings (bidder, product_id, bidding_price) VALUES ($1, $2, $3) RETURNING id;"
+	DB_GET_BID_BY_USER_ID_QUERY    = "SELECT id, bidder, product_id, bidding_price from biddings b1 WHERE bidder = $1 and id = (select max(id) from biddings where b1.bidder = biddings.bidder) order by id desc;"
+	DB_INSERT_BID_QUERY            = "INSERT INTO biddings (bidder, product_id, bidding_price) VALUES ($1, $2, $3) RETURNING id;"
 )
