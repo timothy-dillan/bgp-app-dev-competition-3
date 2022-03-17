@@ -5,6 +5,10 @@
 ## Overall Dependency/Call Architecture
 ![Architecture](dependencyarchitecture.png)
 
+## Database Architecture
+![tables](https://user-images.githubusercontent.com/88418007/158766306-c274f3a8-d567-4d5b-9480-f4e600be85d7.png)
+
+
 ## Overall Tech Stack
 
 - Go (Backend)
