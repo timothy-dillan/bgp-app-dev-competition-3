@@ -2,6 +2,9 @@
 
 **Bidding system** is an auction-inspired bidding system that is built with Go (backend) and React (frontend).
 
+## Overall Dependency/Call Architecture
+![Architecture](dependencyarchitecture.png)
+
 ## Overall Tech Stack
 
 - Go (Backend)
@@ -10,7 +13,6 @@
 - BigCache (In-memory Database)
 - Heroku (planned for deployment purposes)
 - Docker
-
 ## Installation
 Bidding system requires:
 
