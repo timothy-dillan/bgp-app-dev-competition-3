@@ -2,11 +2,10 @@ import './App.css';
 import {
   Routes,
   Route
-} from 'react-router-dom'
-import LandingPage from './pages/landing'
-import LoginPage from './pages/Login'
+} from 'react-router-dom';
+import LandingPage from './pages/landing';
+import LoginPage from './pages/Login';
 import SignUpPage from './pages/SignUp';
-import ReactLanding from './pages/defaultreact'
 import Products from './pages/product';
 import BidsPage from './pages/bids';
 
@@ -14,7 +13,7 @@ function App() {
   return (
     <div className="App">
       <Routes>
-        <Route exact path="/" element={<ReactLanding />} />
+        <Route exact path="/" element={<LoginPage />} />
         <Route path="landing" element={<LandingPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/signup" element={<SignUpPage />} />
